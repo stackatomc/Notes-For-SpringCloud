@@ -25,4 +25,8 @@ If you want an embedded database please put a supported one on the classpath. If
 3. 源码主要分析Eureka Client端，主要是DiscoveryClient类，追溯是InstanceInfoReplicator在run方法中执行D的register方法，而I在D初始化时调用。而eureka-server则主要有BootstrapContext类，在程序启动时具有最先初始化的权限，调用PeerAwareInstanceRegistryImpl和PeerUerkaNodes类均有关于高可用，该方法有一个register提供服务注册，并且将服务注册后的信息同步到其他的eureka server服务中。并且这里eureka client通过http向eureka server注册，所以eureka server也会提供哦那个一个 服务注册的API接口给eureka client，位于Alt+左键查看该register方法，最终被ApplicationResource类的addInstance()方法即服务注册的接口调用。
 4. renew()等同理，从DiscoveryClient处开始分析
 
-##
+### 5.5 高可用的Eureka Server集群
+
+1. 可以使用application-{profile}.properties配置不同的开发环境。还可以用yml多profile的格式
+2. 尝试了指定profile用maven打包启动.命令为：mvn spring-boot:run Dspring.profiles.active=peer
+3. 尝试了第二种执行过程，用yml多profiles时，命令可分布进行编译mvn clean package->进入target->java -jar eureka-server.1.0-SNAPSHOT.jar - -spring.profiles.active=peer1
