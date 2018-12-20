@@ -20,3 +20,9 @@
 5. Resource Server是提供了受OAuth2保护的资源，这些资源为API接口、Html页面、Js文件等。Spring OAuth2提供了实现次保护功能的SPring Security认证过滤器，使用@Configuration、@EnableResourceServer注解，开启Resource Server功能，也可以使用ResrouceServerConfigurer配置tokenServices设置Token如何编码和节码的。当Resource Server和Authorization Server在同一个工程上，则不需要配置此选项。若不在同一个，也可以用RemoteTokenService类
 3. OAuth2 Client客户端，用户访问被OAuth2保护起来的资源，客户端需要提供用于存储用户的授权码和访问令牌的机制，需要配置如下两个选项Protected Resource Configuration、Client Configuration客户端配置
 4. Protected Resource Configuration(Id、clientId、clientSecret、accessTokenUri、scope、clientAuthenticationScheme、userAuthorizationUri)、Client Configuration（可以使用@EnableOAuth2Client注解来简化配置，另外还需要配置1 创建一个过滤器Bean，Id为oauth2ClientContextFilter用来存储当前请求和上下文的请求，2还需要在Request域内创建AccessTokenRequest类型的Bean）
+
+---
+
+## 14.3 案例分析
+
+1. 为auth-serivce、service-hi。serviec-hi调用auth-service获取Token返回给浏览器，浏览器以后所有的请求都需要携带该Token。但缺点是每次请求都需要资源服务内部远程调度auth-service服务来验证Token的正确性，以及该Token对应得以哦那过户所具有的权限，额外多了一次内部请求。如果在高并发的情况下，auth-service需要集群部署，必能且需要做缓存处理。
